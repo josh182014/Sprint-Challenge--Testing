@@ -11,11 +11,9 @@ server.get('/', (req, res) => {
 server.get('/api/games', (req, res) => {
     db('games')
     .then(response => {
-        console.log(response)
         res.status(200).json(response)
     })
     .catch(error => {
-        console.log(error)
         res.status(500).json(error)
     })
 })
@@ -26,11 +24,9 @@ server.post('/api/games', (req, res) => {
     }
     db('games').insert(req.body)
     .then(response => {
-        console.log(response)
         res.status(201).json(response)
     })
     .catch(err => {
-        console.log(err)
         res.status(500).json(err)
     })
 })
