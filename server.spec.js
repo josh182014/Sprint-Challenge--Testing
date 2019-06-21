@@ -6,19 +6,15 @@ afterEach(async () => {
     await db('games').truncate()
 })
 
-// describe('server', () => {
-//     it('should return true', () => {
-//         expect(true).toBe(true)
-//     })
-// })
 
 describe('games', () => {
     describe('post', () => {
         it('should post a new game', async () => {
             const newGame = await supertest(server)
             .post('/api/games')
-            .send({ title: "Cool Game", genre: "action", realeaseYear: 2019})
-            expect(newGame.status).toBe(200)
+            .send({ title: "Cool Game", genre: "action", releaseYear: 2019})
+            expect(newGame.status).toBe(201)
+            expect(newGame.text).toBe("[1]")
         })
 
         it("should return 422 if it doesn't receive all needed information", async () => {
@@ -31,7 +27,7 @@ describe('games', () => {
             const newGame = await supertest(server)
             .post('/api/games')
             .send({ title: "Cyberpunk 2077", genre: "open world" })
-            expect(newGame.status).toBe(200)
+            expect(newGame.status).toBe(201)
         })
     })
 
@@ -42,18 +38,18 @@ describe('games', () => {
             expect(games.status).toBe(200)
         })
         it('should return status 200', async () => {
+            const newGame = { title: "Another Game", genre: "cool", releaseYear: 2019}
             await supertest(server)
-            .post('api/games')
-            .send({ title: "Cool Game", genre: "action", realeaseYear: 2019})
-            .send({ title: "Another Game", genre: "adventure", realeaseYear: 1990})
+            .post('/api/games')
+            .send(newGame)
             const games = await supertest(server)
             .get('/api/games')
             expect(games.status).toBe(200)
         })
-        it('should return indication that there are no games if there are no games stored', async () => {
+        it('should return an empty array if there are no games', async () => {
             games = await supertest(server)
             .get('/api/games')
-            expect(games.status).toBe(404)
+            expect(games.text).toBe("[]")
         })
     })
 })
