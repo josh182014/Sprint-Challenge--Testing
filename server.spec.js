@@ -77,7 +77,7 @@ describe('games', () => {
             expect(games.body.id).toEqual(2)
         })
 
-        it('returns404 if no game for that id' , async () => {
+        it('returns 404 if no game for that id' , async () => {
             const newGame = { title: "Another Game", genre: "action", releaseYear: 2019}
             const newGame2 = { title: "Awesome Game", genre: "adventure", releaseYear: 2015}
             await supertest(server)
@@ -88,6 +88,39 @@ describe('games', () => {
                 .send(newGame2)
             const games = await supertest(server)
                 .get('/api/games/3')
+            expect(games.status).toBe(404)
+        })
+    })
+
+    describe('DEL by id', () => {
+        it('deletes a game by id', async () => {
+            const newGame = { title: "Another Game", genre: "action", releaseYear: 2019}
+            const newGame2 = { title: "Awesome Game", genre: "adventure", releaseYear: 2015}
+            await supertest(server)
+                .post('/api/games')
+                .send(newGame)
+            await supertest(server)
+                .post('/api/games')
+                .send(newGame2)
+            const games = await supertest(server)
+                .del('/api/games/2')
+            expect(games.body).toEqual(1)
+            const getGame = await supertest(server)
+                .get('/api/games')
+            expect(getGame.body[0].id).toEqual(1)
+        })
+
+        it('returns 404 if no game for that id' , async () => {
+            const newGame = { title: "Another Game", genre: "action", releaseYear: 2019}
+            const newGame2 = { title: "Awesome Game", genre: "adventure", releaseYear: 2015}
+            await supertest(server)
+                .post('/api/games')
+                .send(newGame)
+            await supertest(server)
+                .post('/api/games')
+                .send(newGame2)
+            const games = await supertest(server)
+                .del('/api/games/3')
             expect(games.status).toBe(404)
         })
     })

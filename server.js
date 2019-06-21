@@ -52,4 +52,24 @@ server.get('/api/games/:id', (req, res) => {
     })
 })
 
+server.delete('/api/games/:id', (req, res) => {
+    const id = req.params.id
+    db('games')
+    .where({id})
+    .first()
+    .del()
+    .then(response => {
+        if(response) {
+            
+            res.status(200).json(response)
+        }
+        else {
+            res.status(404).json("Game Not Found")
+        }
+    })
+    .catch(error => {
+        res.status(500).json(error)
+    })
+})
+
 module.exports = server;
