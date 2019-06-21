@@ -29,6 +29,25 @@ describe('games', () => {
                 .send({ title: "Cyberpunk 2077", genre: "open world" })
             expect(newGame.status).toBe(201)
         })
+        it('should return status 405 if game title already exists', async () => {
+            const newGame = { title: "Another Game", genre: "action", releaseYear: 2019}
+            const newGame2 = { title: "Another Game", genre: "adventure", releaseYear: 2015}
+            const gameArray = [
+                {...newGame, id: 1},
+                {...newGame2, id: 2}
+            ]
+            await supertest(server)
+                .post('/api/games')
+                .send(newGame)
+            const whatever = await supertest(server)
+                .post('/api/games')
+                .send(newGame2)
+                const games = await supertest(server)
+                .get('/api/games')
+            expect(games.status).toBe(200)
+            console.log(games.body)
+            expect(whatever.status).toBe(405)
+        })
     })
 
     describe('GET', () => {

@@ -4,6 +4,28 @@ const db = require('./data/dbConfig')
 const server = express();
 server.use(express.json());
 
+const gameCheck = async (req, res, next) => {
+    const newGame = req.body.title
+    const games = await db('games')
+    if (games) {
+        titles = []
+        games.forEach(function(each) {
+            titles.push(each.title)
+        })
+        if (titles.includes(newGame)) {
+            console.log('invoked!')
+            res.status(405).json('hi')
+        }
+        else {
+            next()
+        }
+
+    }
+    else {
+        next()
+    }
+}
+
 server.get('/', (req, res) => {
   res.status(200).json('ITS WORKING');
 });
@@ -18,7 +40,7 @@ server.get('/api/games', (req, res) => {
     })
 })
 
-server.post('/api/games', (req, res) => {
+server.post('/api/games', gameCheck, (req, res) => {
     if(!req.body.title || !req.body.genre) {
         res.status(422).json("Incomplete Information")
     }
