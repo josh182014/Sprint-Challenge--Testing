@@ -13,13 +13,11 @@ const gameCheck = async (req, res, next) => {
             titles.push(each.title)
         })
         if (titles.includes(newGame)) {
-            console.log('invoked!')
-            res.status(405).json('hi')
+            res.status(405).json('Game already exists!')
         }
         else {
             next()
         }
-
     }
     else {
         next()
