@@ -14,7 +14,7 @@ describe('games', () => {
                 .post('/api/games')
                 .send({ title: "Cool Game", genre: "action", releaseYear: 2019})
             expect(newGame.status).toBe(201)
-            expect(newGame.text).toBe("[1]")
+            expect(newGame.body).toEqual([1])
         })
 
         it("should return 422 if it doesn't receive all needed information", async () => {
@@ -58,7 +58,7 @@ describe('games', () => {
         it('should return an empty array if there are no games', async () => {
             games = await supertest(server)
                 .get('/api/games')
-            expect(games.text).toBe("[]")
+            expect(games.body).toEqual([])
         })
     })
 })
