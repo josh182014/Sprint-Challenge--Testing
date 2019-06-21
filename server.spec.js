@@ -61,4 +61,34 @@ describe('games', () => {
             expect(games.body).toEqual([])
         })
     })
+
+    describe('GET by id', () => {
+        it('returns a game by id', async () => {
+            const newGame = { title: "Another Game", genre: "action", releaseYear: 2019}
+            const newGame2 = { title: "Awesome Game", genre: "adventure", releaseYear: 2015}
+            await supertest(server)
+                .post('/api/games')
+                .send(newGame)
+            await supertest(server)
+                .post('/api/games')
+                .send(newGame2)
+            const games = await supertest(server)
+                .get('/api/games/2')
+            expect(games.body.id).toEqual(2)
+        })
+
+        it('returns404 if no game for that id' , async () => {
+            const newGame = { title: "Another Game", genre: "action", releaseYear: 2019}
+            const newGame2 = { title: "Awesome Game", genre: "adventure", releaseYear: 2015}
+            await supertest(server)
+                .post('/api/games')
+                .send(newGame)
+            await supertest(server)
+                .post('/api/games')
+                .send(newGame2)
+            const games = await supertest(server)
+                .get('/api/games/3')
+            expect(games.status).toBe(404)
+        })
+    })
 })
